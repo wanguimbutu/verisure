@@ -9,22 +9,15 @@ class Authenticator(Document):
 	pass
 
 @frappe.whitelist()
-def query_by_qrcode(qrcode):
-    """
-    Query by QR Code:
-    - Returns item_code, item_name, unique_id only.
-    """
-    doc = frappe.get_doc("Authenticator", {"qrcode": qrcode})
-    if not doc:
-        frappe.throw("No record found matching the provided qrcode", frappe.DoesNotExistError)
+def query_by_qrcode(qrcode: str):
+    fields = ["name", "unique_id", "item_code", "item_name"]
 
-    return {
-        "name": doc.name,
-        "unique_id": doc.unique_id,
-        "item_code": doc.item_code,
-        "item_name": doc.item_name
-    }
+    result = frappe.db.get_value("Authenticator", {"qrcode": qrcode}, fields, as_dict=True)
 
+    if not result:
+        return {"message": f"No record found for qrcode: {qrcode}"}
+
+    return result
 
 
 @frappe.whitelist()
