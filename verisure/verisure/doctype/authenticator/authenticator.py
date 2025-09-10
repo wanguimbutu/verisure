@@ -49,8 +49,8 @@ def query_by_unique_id():
     else:
         doc.no_of_authentications += 1
 
-    # Append auth history
-    doc.append("auth_history", {
+    # Append authentication history
+    doc.append("authentication_history", {
         "location_id": location_id or "UNKNOWN",
         "timestamp": now()
     })
@@ -64,5 +64,5 @@ def query_by_unique_id():
         "item_name": doc.item_name,
         "batch_id": doc.batch_id,
         "no_of_authentications": doc.no_of_authentications,
-        "auth_history": doc.auth_history
+        "authentication_history": doc.authentication_history
     }
