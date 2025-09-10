@@ -56,6 +56,7 @@ def query_by_unique_id():
     })
 
     doc.save(ignore_permissions=True)
+    frappe.db.commit()
 
     return {
         "name": doc.name,
