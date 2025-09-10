@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import now
+import json
 
 class Authenticator(Document):
 	pass
@@ -20,31 +21,48 @@ def query_by_qrcode(qrcode: str):
     return result
 
 
-@frappe.whitelist()
-def query_by_unique_id(unique_id=None, location_id=None):
-    """Fetch record by unique_id and update authentication history"""
+@frappe.whitelist(allow_guest=True)
+def query_by_unique_id():
+    # Try to get from form_dict first
+    data = frappe.local.form_dict
+
+    # If nothing, parse JSON body
+    if not data.get("unique_id"):
+        try:
+            body = frappe.request.get_data(as_text=True)
+            data = json.loads(body)
+        except Exception:
+            data = {}
+
+    unique_id = data.get("unique_id")
+    location_id = data.get("location_id")
+
     if not unique_id:
         return {"error": "unique_id is required"}
 
-    fields = ["name", "expiry_date", "item_code", "item_name", "batch_id", "no_of_authentications", "auth_history"]
+    # Fetch the authenticator doc
+    doc = frappe.get_doc("Authenticator", {"unique_id": unique_id})
 
-    doc = frappe.db.get_value("Authenticator", {"unique_id": str(unique_id).strip()}, fields, as_dict=True)
+    # Increment or set no_of_authentications
+    if not doc.no_of_authentications:
+        doc.no_of_authentications = 1
+    else:
+        doc.no_of_authentications += 1
 
-    if not doc:
-        return {"message": f"No record found for unique_id: {unique_id}"}
+    # Append auth history
+    doc.append("auth_history", {
+        "location_id": location_id or "UNKNOWN",
+        "timestamp": now()
+    })
 
-    # increment no_of_authentications
-    no_auths = doc.get("no_of_authentications") or 0
-    frappe.db.set_value("Authenticator", doc.name, "no_of_authentications", no_auths + 1)
+    doc.save(ignore_permissions=True)
 
-    # append auth_history
-    history = doc.get("auth_history") or []
-    history.append({"location_id": location_id or "UNKNOWN", "timestamp": now()})
-    frappe.db.set_value("Authenticator", doc.name, "auth_history", history)
-
-    # refresh updated values
-    updated_doc = frappe.db.get_value(
-        "Authenticator", {"name": doc.name}, fields, as_dict=True
-    )
-
-    return updated_doc
+    return {
+        "name": doc.name,
+        "expiry_date": doc.expiry_date,
+        "item_code": doc.item_code,
+        "item_name": doc.item_name,
+        "batch_id": doc.batch_id,
+        "no_of_authentications": doc.no_of_authentications,
+        "auth_history": doc.auth_history
+    }
