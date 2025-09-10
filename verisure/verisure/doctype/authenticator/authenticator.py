@@ -21,39 +21,30 @@ def query_by_qrcode(qrcode: str):
 
 
 @frappe.whitelist()
-def query_by_unique_id(unique_id, location_id=None):
-    """
-    Query by Unique ID:
-    - Returns item_code, item_name, unique_id, expiry_date, batch_id
-    - Increments no_of_authentications (sets to 1 if missing or 0)
-    - Writes location_id and timestamp into auth_history
-    """
-    doc = frappe.get_doc("Authenticator", {"unique_id": unique_id})
+def query_by_unique_id(unique_id=None, location_id=None):
+    """Fetch record by unique_id and update authentication history"""
+    if not unique_id:
+        return {"error": "unique_id is required"}
+
+    fields = ["name", "expiry_date", "item_code", "item_name", "batch_id", "no_of_authentications", "auth_history"]
+
+    doc = frappe.db.get_value("Authenticator", {"unique_id": str(unique_id).strip()}, fields, as_dict=True)
+
     if not doc:
-        frappe.throw("No record found matching the provided unique_id", frappe.DoesNotExistError)
+        return {"message": f"No record found for unique_id: {unique_id}"}
 
-    # Increment authentication counter
-    if not doc.no_of_authentications or doc.no_of_authentications == 0:
-        doc.no_of_authentications = 1
-    else:
-        doc.no_of_authentications += 1
+    # increment no_of_authentications
+    no_auths = doc.get("no_of_authentications") or 0
+    frappe.db.set_value("Authenticator", doc.name, "no_of_authentications", no_auths + 1)
 
-    # Append history
-    if location_id:
-        doc.append("auth_history", {
-            "location_id": location_id,
-            "timestamp": now()
-        })
+    # append auth_history
+    history = doc.get("auth_history") or []
+    history.append({"location_id": location_id or "UNKNOWN", "timestamp": now()})
+    frappe.db.set_value("Authenticator", doc.name, "auth_history", history)
 
-    doc.save(ignore_permissions=True)
+    # refresh updated values
+    updated_doc = frappe.db.get_value(
+        "Authenticator", {"name": doc.name}, fields, as_dict=True
+    )
 
-    return {
-        "name": doc.name,
-        "unique_id": doc.unique_id,
-        "expiry_date": doc.expiry_date,
-        "item_code": doc.item_code,
-        "item_name": doc.item_name,
-        "batch_id": doc.batch_id,
-        "no_of_authentications": doc.no_of_authentications,
-        "auth_history": doc.auth_history
-    }
+    return updated_doc
