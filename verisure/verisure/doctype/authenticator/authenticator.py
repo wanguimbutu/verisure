@@ -23,10 +23,10 @@ def query_by_qrcode(qrcode: str):
 
 @frappe.whitelist(allow_guest=True)
 def query_by_unique_id():
-    # Try to get from form_dict first
+    # Try to get data from form_dict first
     data = frappe.local.form_dict
 
-    # If nothing, parse JSON body
+    # Fallback: parse raw JSON body
     if not data.get("unique_id"):
         try:
             body = frappe.request.get_data(as_text=True)
@@ -40,14 +40,20 @@ def query_by_unique_id():
     if not unique_id:
         return {"error": "unique_id is required"}
 
-    # Fetch the authenticator doc
+    # Fetch authenticator doc
     doc = frappe.get_doc("Authenticator", {"unique_id": unique_id})
 
-    # Increment or set no_of_authentications
-    if not doc.no_of_authentications:
+    feedback = None
+
+    # Update no_of_authentications + activated
+    if not doc.no_of_authentications or doc.no_of_authentications == 0:
         doc.no_of_authentications = 1
+        doc.activated = "Yes"
+        feedback = "original"
     else:
         doc.no_of_authentications += 1
+        doc.activated = "Yes"
+        feedback = "this item has been verified before"
 
     # Append authentication history
     doc.append("authentication_history", {
@@ -65,5 +71,13 @@ def query_by_unique_id():
         "item_name": doc.item_name,
         "batch_id": doc.batch_id,
         "no_of_authentications": doc.no_of_authentications,
-        "authentication_history": doc.authentication_history
+        "activated": doc.activated,
+        "feedback": feedback,
+        "authentication_history": [
+            {
+                "location_id": h.location_id,
+                "timestamp": h.creation
+            }
+            for h in doc.authentication_history
+        ]
     }
