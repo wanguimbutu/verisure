@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-08 11:23:05.829558",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "scan_id",
+  "unique_id",
+  "location_id"
+ ],
+ "fields": [
+  {
+   "fieldname": "scan_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Scan ID"
+  },
+  {
+   "fieldname": "unique_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unique ID"
+  },
+  {
+   "fieldname": "location_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Location ID"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-09-10 10:00:06.937723",
+ "modified_by": "Administrator",
+ "module": "Verisure",
+ "name": "Authentication History",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

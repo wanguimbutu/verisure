@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-08 11:19:01.990292",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "qrcode",
+  "unique_id",
+  "item_code",
+  "item_name",
+  "batch_id",
+  "expiry_date",
+  "activated",
+  "no_of_authentications",
+  "authentication_history"
+ ],
+ "fields": [
+  {
+   "fieldname": "qrcode",
+   "fieldtype": "Data",
+   "label": "QRcode"
+  },
+  {
+   "fieldname": "unique_id",
+   "fieldtype": "Data",
+   "label": "Unique ID"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "batch_id",
+   "fieldtype": "Data",
+   "label": "Batch ID"
+  },
+  {
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "label": "Expiry Date"
+  },
+  {
+   "fieldname": "activated",
+   "fieldtype": "Select",
+   "label": "Activated?",
+   "options": "Yes\nNo"
+  },
+  {
+   "fieldname": "no_of_authentications",
+   "fieldtype": "Int",
+   "label": "No of Authentications"
+  },
+  {
+   "fieldname": "authentication_history",
+   "fieldtype": "Table",
+   "label": "Authentication History",
+   "options": "Authentication History"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-09-10 09:59:28.644526",
+ "modified_by": "Administrator",
+ "module": "Verisure",
+ "name": "Authenticator",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
