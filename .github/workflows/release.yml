@@ -3,6 +3,10 @@ name: Release Verisure App
 on:
   push:
     branches: [develop]
+
+permissions:
+  contents: write   
+
 jobs:
   release:
     name: Semantic Release
