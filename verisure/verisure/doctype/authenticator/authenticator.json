@@ -19,18 +19,21 @@
   {
    "fieldname": "qrcode",
    "fieldtype": "Data",
-   "label": "QRcode"
+   "in_list_view": 1,
+   "label": "QRcode",
+   "reqd": 1
   },
   {
    "fieldname": "unique_id",
    "fieldtype": "Data",
-   "label": "Unique ID"
+   "in_list_view": 1,
+   "label": "Unique ID",
+   "reqd": 1
   },
   {
    "fieldname": "item_code",
-   "fieldtype": "Link",
-   "label": "Item Code",
-   "options": "Item"
+   "fieldtype": "Data",
+   "label": "Item Code"
   },
   {
    "fieldname": "item_name",
@@ -68,7 +71,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-10 09:59:28.644526",
+ "modified": "2025-11-24 07:38:50.904358",
  "modified_by": "Administrator",
  "module": "Verisure",
  "name": "Authenticator",

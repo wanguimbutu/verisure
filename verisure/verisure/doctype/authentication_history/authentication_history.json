@@ -15,7 +15,6 @@
   {
    "fieldname": "scan_id",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Scan ID"
   },
   {
@@ -41,7 +40,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-10 11:19:49.443363",
+ "modified": "2025-11-24 07:39:26.127688",
  "modified_by": "Administrator",
  "module": "Verisure",
  "name": "Authentication History",
