@@ -11,7 +11,7 @@ class Authenticator(Document):
 
 @frappe.whitelist()
 def query_by_qrcode(qrcode: str):
-    fields = ["name", "unique_id", "item_code", "item_name"]
+    fields = ["name", "unique_id", "item_code", "item_name","expiry_date","batch_id"]
 
     result = frappe.db.get_value("Authenticator", {"qrcode": qrcode}, fields, as_dict=True)
 
