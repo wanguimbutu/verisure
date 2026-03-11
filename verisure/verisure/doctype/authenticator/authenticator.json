@@ -11,6 +11,7 @@
   "item_name",
   "batch_id",
   "expiry_date",
+  "manufacture_date",
   "activated",
   "no_of_authentications",
   "authentication_history"
@@ -66,12 +67,17 @@
    "fieldtype": "Table",
    "label": "Authentication History",
    "options": "Authentication History"
+  },
+  {
+   "fieldname": "manufacture_date",
+   "fieldtype": "Date",
+   "label": "Manufacture Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-24 07:38:50.904358",
+ "modified": "2026-03-11 11:12:30.786560",
  "modified_by": "Administrator",
  "module": "Verisure",
  "name": "Authenticator",
